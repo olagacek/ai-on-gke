@@ -61,6 +61,8 @@ importlib-metadata==7.0.1
     # via diffusers
 itsdangerous==2.1.2
     # via flask
+jax==0.4.25
+    # via -r jax/requirements.txt
 jinja2==3.1.3
     # via flask
 keras==2.15.0
@@ -74,21 +76,27 @@ markupsafe==2.1.5
     #   jinja2
     #   werkzeug
 ml-dtypes==0.2.0
-    # via tensorflow
+    # via
+    #   jax
+    #   tensorflow
 numpy==1.26.4
     # via
     #   -r jax/requirements.txt
     #   diffusers
     #   h5py
+    #   jax
     #   ml-dtypes
     #   opt-einsum
+    #   scipy
     #   tensorboard
     #   tensorflow
     #   transformers
 oauthlib==3.2.2
     # via requests-oauthlib
 opt-einsum==3.3.0
-    # via tensorflow
+    # via
+    #   jax
+    #   tensorflow
 packaging==23.2
     # via
     #   huggingface-hub
@@ -133,6 +141,8 @@ safetensors==0.4.2
     # via
     #   diffusers
     #   transformers
+scipy==1.12.0
+    # via jax
 six==1.16.0
     # via
     #   astunparse
