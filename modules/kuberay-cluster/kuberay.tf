@@ -25,26 +25,23 @@ resource "helm_release" "ray-cluster" {
   namespace        = var.namespace
   create_namespace = var.create_namespace
   version          = "0.6.1"
-
-  values = [
-    var.enable_autopilot ? templatefile("${path.module}/kuberay-autopilot-values.yaml", {
+  values = var.enable_autopilot ? (var.enable_tpu ? [templatefile("${path.module}/kuberay-autopilot-tpu-values.yaml", {
+    gcs_bucket          = var.gcs_bucket
+    k8s_service_account = var.google_service_account
+    grafana_host        = var.grafana_host
+    })] : [templatefile("${path.module}/kuberay-autopilot-values.yaml", {
+    gcs_bucket          = var.gcs_bucket
+    k8s_service_account = var.google_service_account
+    grafana_host        = var.grafana_host
+    })]) : (var.enable_tpu ? [templatefile("${path.module}/kuberay-tpu-values.yaml", {
       gcs_bucket          = var.gcs_bucket
       k8s_service_account = var.google_service_account
       grafana_host        = var.grafana_host
-    }) : var.enable_tpu ? templatefile("${path.module}/kuberay-tpu-values.yaml", {
+      })] : [templatefile("${path.module}/kuberay-values.yaml", {
       gcs_bucket          = var.gcs_bucket
       k8s_service_account = var.google_service_account
       grafana_host        = var.grafana_host
-    }) : var.enable_gpu ? templatefile("${path.module}/kuberay-gpu-values.yaml", {
-      gcs_bucket          = var.gcs_bucket
-      k8s_service_account = var.google_service_account
-      grafana_host        = var.grafana_host
-    }) : templatefile("${path.module}/kuberay-values.yaml", {
-      gcs_bucket          = var.gcs_bucket
-      k8s_service_account = var.google_service_account
-      grafana_host        = var.grafana_host
-    })
-  ]
+  })])
 }
 
 resource "kubernetes_service" "tpu-worker-svc" {
